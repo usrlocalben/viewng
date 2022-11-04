@@ -8,7 +8,6 @@ delegate CompileResult CompileFunc(ReadOnlySpan<char> id, JsonElement data);
 
 public
 class CompileResult {
-  public bool success = false;
   public Node? node = null;
   public readonly List<Node> deps = new(); }
 
@@ -29,8 +28,7 @@ abstract public class NodeCompilerBase {
     _out.deps.Clear();
 
     CompileImpl();
-    _out.success = _out.node is not null;
-    if (!_out.success) {
+    if (_out.node is null) {
       throw new Exception("badness"); }
     return _out; }
 
@@ -38,13 +36,13 @@ abstract public class NodeCompilerBase {
   void Input(string attr, bool required) {
     if (_data.TryGetProperty(attr, out var attrData)) {
       if (attrData.ValueKind == JsonValueKind.String) {
-        _links.Add(new NodeRef{ attr=attr, target=attrData.GetString() ?? ""});  // XXX better way to convert nullable to non-nullable?
+        _links.Add(new NodeRef(attr, attrData.GetString() ?? ""));  // XXX better way to convert nullable to non-nullable?
         }
       else if (attrData.ValueKind == JsonValueKind.Object) {
         CompileResult result = AnyCompiler.Compile(attrData);
-        if (result.success) {
-          var subId = result.node._id;
-          _links.Add(new NodeRef{ attr=attr, target=subId });
+        if (result.node is not null) {
+          var subId = result.node.Id;
+          _links.Add(new NodeRef(attr, subId));
           _out.deps.Add(result.node);
           _out.deps.AddRange(result.deps); }
         else {
@@ -104,18 +102,16 @@ class NodeLinker {
   void Link(List<Node> pgm) {
     Dictionary<string, int> byId = new();
     for (int i=0; i<pgm.Count; ++i) {
-      if (byId.TryGetValue(pgm[i]._id, out _)) {
-        throw new Exception($"node id \"{pgm[i]._id}\" not unique"); }
-      byId[pgm[i]._id] = i; }
+      if (byId.TryGetValue(pgm[i].Id, out _)) {
+        throw new Exception($"node id \"{pgm[i].Id}\" not unique"); }
+      byId[pgm[i].Id] = i; }
     foreach (var node in pgm) {
-      foreach (var input in node._refs) {
-        var parts = input.target.Split(':', 2);
-        var depId = parts[0];
-        var depSlot = parts.Length ==1 ? "default" : parts[1];
+      foreach (var input in node.Ref) {
+        var (depId, depSlot) = input.Slot();
         if (byId.TryGetValue(depId, out int depIdx)) {
-          node.Connect(input.attr, pgm[depIdx], depSlot); }
+          node.Connect(input.Attr, pgm[depIdx], depSlot); }
         else {
-          throw new Exception($"node={node._id} attr={input.attr} dep={depId} not found"); }}}} }
+          throw new Exception($"node={node.Id} attr={input.Attr} dep={depId} not found"); }}}} }
 
 
 }  // close package namespace

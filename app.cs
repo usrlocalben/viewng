@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
 using System.Text.Json;
-using rqdq.rglv;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.Direct3D;
@@ -9,7 +8,6 @@ using SharpDX.DXGI;
 using SharpDX.Windows;
 using SharpDX.Mathematics.Interop;
 using DXDevice = SharpDX.Direct3D11.Device;
-using System.ComponentModel;
 
 namespace rqdq {
 namespace app {
@@ -44,8 +42,9 @@ class MyApp {
     SystemValues systemValues = new("system");
     builtins.Add(systemValues);
 
-    string data = @"{
+    string data = @"[{
 ""$layer"": {
+  ""id"": ""__main__"",
   ""camera"": {""$look"": {
                  ""position"": {""$float3"": {""x"": 0, ""y"": 5, ""z"": -5}},
                  ""target"": {""$float3"": {""x"": 0, ""y"": 0, ""z"": 0}},
@@ -59,20 +58,30 @@ class MyApp {
                             }},
              ""gl"": {""$mesh"": {""src"": ""colortest.obj""}}
              }}
-  }}";
+  }}]";
 
     CompileResult cr;
     using (JsonDocument doc = JsonDocument.Parse(data)) {
-      cr = AnyCompiler.Compile(doc.RootElement); }
-    if (!cr.success) {
-      throw new Exception("compile failed"); }
+      var docroot = doc.RootElement;
+      foreach (var elem in docroot.EnumerateArray()) {
+        cr = AnyCompiler.Compile(elem);
+        if (cr.node is not null) {
+          graph.Add(cr.node);
+          graph.AddRange(cr.deps); }
+        else {
+          throw new Exception("compile failed list"); }}}
 
-
-    graph.Add(cr.node);
-    graph.AddRange(cr.deps);
     graph.AddRange(builtins);
-    var sceneRoot = cr.node;
     NodeLinker.Link(graph);
+
+    ILayer? sceneRoot = null;
+    foreach (var node in graph) {
+      if (node.Id == "__main__") {
+        if (node is ILayer layerNode) {
+          sceneRoot = layerNode; }}}
+    if (sceneRoot is null) {
+      throw new Exception("did not find a layer node with id __main__"); }
+
 
     var form = new RenderForm("rqdq 2022");
     var desc = new SwapChainDescription() {

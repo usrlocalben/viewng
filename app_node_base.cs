@@ -5,16 +5,30 @@ using DXDevice = SharpDX.Direct3D11.Device;
 namespace rqdq {
 namespace app {
 
-public
-struct NodeRef {
-  public string attr;
-  public string target; };
+// public
+public struct NodeRef {
+  public readonly string Attr;
+  public readonly string Target;
+
+  public
+  NodeRef(string a, string t) {
+    Attr = a;
+    Target = t; }
+
+  public (string, string) Slot() {
+    var parts = Target.Split(':', 2);
+    var depId = parts[0];
+    var depSlot = parts.Length ==1 ? "default" : parts[1];
+    return (depId, depSlot); }}
 
 
 public
 class Node {
-  public readonly string _id;
-  public readonly NodeRef[] _refs;
+  private readonly string _id;
+  private readonly NodeRef[] _refs;
+
+  public string Id => _id;
+  public NodeRef[] Ref => _refs;
 
   public virtual
   void Receive(string n, float a) {}
