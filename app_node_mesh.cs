@@ -47,7 +47,7 @@ float4 PS(PS_DATA data) : SV_Target {
   private DXBuffer? _constantBuffer;
 
   public
-  GlMesh(string id, NodeRef[] refs, ObjMesh mesh) : base(id, refs) {
+  GlMesh(string id, ObjMesh mesh) : base(id) {
     _mesh = mesh; }
 
   public override
@@ -100,10 +100,10 @@ float4 PS(PS_DATA data) : SV_Target {
 
 
 public class GlMeshCompiler : NodeCompilerBase {
-  static public void Install() {
-    AnyCompiler.Register("mesh", new CompileFunc(new GlMeshCompiler().Compile)); }
+  public static void Install() {
+    AnyCompiler.Register("mesh", (INodeCompiler)new GlMeshCompiler()); }
   public override void CompileImpl() {
-  Console.WriteLine("mesh compile");
+    Console.WriteLine("mesh compile");
     if (_data.TryGetProperty("src", out var src)) {
       var fn = src.GetString();
       fn = Path.Join(rqdq.app.MyApp.dataDir, fn);
@@ -122,7 +122,7 @@ public class GlMeshCompiler : NodeCompilerBase {
         Console.WriteLine($"material \"{it}\""); }
       foreach (var it in mesh.Groups) {
         Console.WriteLine($"group \"{it}\""); }*/
-      _out.node = new GlMesh(_id, _links.ToArray(), mesh); }
+      _node = new GlMesh(_id, mesh); }
       else {
       throw new Exception("no mesh src");
       }}}

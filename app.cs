@@ -36,7 +36,8 @@ class MyApp {
 
   static public
   async Task<int> AsyncMain(string[] args) {
-    List<Node> graph = new();
+    List<Node> graphNodes = new();
+    List<NodeLink> graphLinks = new();
 
     List<Node> builtins = new();
     SystemValues systemValues = new("system");
@@ -65,17 +66,17 @@ class MyApp {
       var docroot = doc.RootElement;
       foreach (var elem in docroot.EnumerateArray()) {
         cr = AnyCompiler.Compile(elem);
-        if (cr.node is not null) {
-          graph.Add(cr.node);
-          graph.AddRange(cr.deps); }
+        if (cr.root is not null) {
+          graphNodes.AddRange(cr.nodes);
+          graphLinks.AddRange(cr.links); }
         else {
           throw new Exception("compile failed list"); }}}
 
-    graph.AddRange(builtins);
-    NodeLinker.Link(graph);
+    graphNodes.AddRange(builtins);
+    GraphLinker.Link(graphNodes, graphLinks);
 
     ILayer? sceneRoot = null;
-    foreach (var node in graph) {
+    foreach (var node in graphNodes) {
       if (node.Id == "__main__") {
         if (node is ILayer layerNode) {
           sceneRoot = layerNode; }}}
@@ -101,7 +102,7 @@ class MyApp {
     var factory = swapChain.GetParent<Factory>();
     factory.MakeWindowAssociation(form.Handle, WindowAssociationFlags.IgnoreAll);
 
-    foreach (var node in graph) {
+    foreach (var node in graphNodes) {
       node.Init(device); }
         
 

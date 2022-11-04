@@ -17,7 +17,7 @@ class GlLayer : Node, ILayer {
   private readonly Vector4 _color;
   
   public
-  GlLayer(string id, NodeRef[] refs, Options? opt=null) : base(id, refs) {
+  GlLayer(string id, Options? opt=null) : base(id) {
     _color = opt?.color ?? new(0.0F);}
 
   public override
@@ -58,12 +58,12 @@ class GlLayer : Node, ILayer {
 
 public class GlLayerCompiler : NodeCompilerBase {
   static public void Install() {
-    AnyCompiler.Register("layer", new CompileFunc(new GlLayerCompiler().Compile)); }
+    AnyCompiler.Register("layer", (INodeCompiler)new GlLayerCompiler()); }
   public override void CompileImpl() {
     Input("camera", required: true);
     Input("gl", required: true);
     Input("color", required: false);
-    _out.node = new GlLayer(_id, _links.ToArray()); }} 
+    _node = new GlLayer(_id); }} 
 
 
 }  // close package namespace

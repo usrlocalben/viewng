@@ -1,50 +1,60 @@
 ﻿using System.Text.Json;
+using System.Windows.Forms.VisualStyles;
 
 namespace rqdq {
 namespace app {
 
-delegate CompileResult CompileFunc(ReadOnlySpan<char> id, JsonElement data);
+interface INodeCompiler {
+  CompileResult Compile(ReadOnlySpan<char> id, JsonElement data); }
 
 
 public
 class CompileResult {
-  public Node? node = null;
-  public readonly List<Node> deps = new(); }
+  public Node? root = null;
+  public readonly List<Node> nodes = new();
+  public readonly List<NodeLink> links = new(); }
 
 
-abstract public class NodeCompilerBase {
+public abstract
+class NodeCompilerBase : INodeCompiler {
 
   protected JsonElement _data;
   protected string _id;
-  protected readonly List<NodeRef> _links = new();
-  protected CompileResult _out = new();
+  protected readonly List<NodeLink> _links = new();
+  protected Node? _node = null;
+  protected readonly CompileResult _out = new();
 
   public
   CompileResult Compile(ReadOnlySpan<char> id, JsonElement data) {
     _id = id.ToString();
     _data = data;
     _links.Clear();
-    _out.node = null;
-    _out.deps.Clear();
+    _node = null;
+    _out.root = null;
+    _out.links.Clear();
+    _out.nodes.Clear();
 
     CompileImpl();
-    if (_out.node is null) {
+    if (_node is null) {
       throw new Exception("badness"); }
+    _out.root = _node;
+    _out.nodes.Add(_node);
+    _out.links.AddRange(_links);
     return _out; }
 
   protected
   void Input(string attr, bool required) {
     if (_data.TryGetProperty(attr, out var attrData)) {
       if (attrData.ValueKind == JsonValueKind.String) {
-        _links.Add(new NodeRef(attr, attrData.GetString() ?? ""));  // XXX better way to convert nullable to non-nullable?
+        _links.Add(new NodeLink(_id, attr, attrData.GetString() ?? ""));  // XXX better way to convert nullable to non-nullable?
         }
       else if (attrData.ValueKind == JsonValueKind.Object) {
         CompileResult result = AnyCompiler.Compile(attrData);
-        if (result.node is not null) {
-          var subId = result.node.Id;
-          _links.Add(new NodeRef(attr, subId));
-          _out.deps.Add(result.node);
-          _out.deps.AddRange(result.deps); }
+        if (result.root is not null) {
+          var subId = result.root.Id;
+          _links.Add(new NodeLink(_id, attr, subId));
+          _out.nodes.AddRange(result.nodes);
+          _out.links.AddRange(result.links); }
         else {
           throw new Exception($"unknown or malformed object at attr=\"{attr}\""); }}
       else {
@@ -53,14 +63,16 @@ abstract public class NodeCompilerBase {
       if (required) {
         throw new Exception("required!"); }}}
 
-  public abstract void CompileImpl(); }
+  public abstract
+  void CompileImpl(); }
 
 
-static class ParseUtil {
+internal static
+class ParseUtil {
 
   private static int _idSeq = 0;
 
-  static public
+  public static
   bool TryExtractCommand(JsonElement data, out string name, out string id, out JsonElement enclosed) {
     id = $"__auto{_idSeq++}__";
     name = "";
@@ -77,41 +89,42 @@ static class ParseUtil {
     return false; }}
 
 
-static class AnyCompiler {
+internal static
+class AnyCompiler {
   private static
-  Dictionary<string, CompileFunc> _db = new();
+  Dictionary<string, INodeCompiler> _db = new();
 
   public static
-  void Register(string name, CompileFunc ff) {
+  void Register(string name, INodeCompiler nc) {
     Console.WriteLine($"registered [{name}]");
-    _db[name] = ff; }
+    _db[name] = nc; }
 
   public static
   CompileResult Compile(JsonElement data) {
     if (ParseUtil.TryExtractCommand(data, out string name, out string id, out JsonElement payload)) {
-      if (_db.TryGetValue(name, out var cf)) {
-        var cr = cf(id, payload);
-        return cr; }}
+      if (_db.TryGetValue(name, out var nc)) {
+        return nc.Compile(id, payload); }}
     return new(); } }
 
 
 public static
-class NodeLinker {
+class GraphLinker {
 
-  static public
-  void Link(List<Node> pgm) {
-    Dictionary<string, int> byId = new();
+  public static
+  void Link(List<Node> pgm, List<NodeLink> links) {
+    Dictionary<string, Node> byId = new();
     for (int i=0; i<pgm.Count; ++i) {
       if (byId.TryGetValue(pgm[i].Id, out _)) {
         throw new Exception($"node id \"{pgm[i].Id}\" not unique"); }
-      byId[pgm[i].Id] = i; }
-    foreach (var node in pgm) {
-      foreach (var input in node.Ref) {
-        var (depId, depSlot) = input.Slot();
-        if (byId.TryGetValue(depId, out int depIdx)) {
-          node.Connect(input.Attr, pgm[depIdx], depSlot); }
-        else {
-          throw new Exception($"node={node.Id} attr={input.Attr} dep={depId} not found"); }}}} }
+      byId[pgm[i].Id] = pgm[i]; }
+    foreach (var link in links) {
+      var fromNode = byId[link.Id];
+      var (depId, depSlot) = link.Slot();
+      if (byId.TryGetValue(depId, out Node toNode)) {
+        Console.WriteLine($"link from={fromNode.Id}:{link.Attr} to={depId}:{depSlot}");
+        fromNode.Connect(link.Attr, toNode, depSlot); }
+      else {
+        throw new Exception($"unresolved link from={fromNode.Id}:{link.Attr} to={depId}:{depSlot}"); }}}}
 
 
 }  // close package namespace

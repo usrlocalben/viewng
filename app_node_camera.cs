@@ -11,7 +11,7 @@ class LookAt : Node, ICamera {
   private IValueNode? _aspectNode;
   private string? _aspectSlot;
 
-  public LookAt(string id, NodeRef[] refs) : base(id, refs) {}
+  public LookAt(string id) : base(id) {}
 
   public override
   void Connect(string attr, Node target, string slot) {
@@ -48,13 +48,13 @@ class LookAt : Node, ICamera {
 
 
 class LookAtCompiler : NodeCompilerBase {
-  static public void Install() {
-    AnyCompiler.Register("look", new CompileFunc(new LookAtCompiler().Compile)); }
+  public static void Install() {
+    AnyCompiler.Register("look", (INodeCompiler)new LookAtCompiler()); }
   public override void CompileImpl() {
     Input("position", required: false);
     Input("target", required: false);
     Input("aspect", required: false);
-    _out.node = new LookAt(_id, _links.ToArray()); }} 
+    _node = new LookAt(_id); }}
 
 
 }  // close package namespace

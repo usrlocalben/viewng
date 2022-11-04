@@ -5,13 +5,14 @@ using DXDevice = SharpDX.Direct3D11.Device;
 namespace rqdq {
 namespace app {
 
-// public
-public struct NodeRef {
+public struct NodeLink {
+  public readonly string Id;
   public readonly string Attr;
   public readonly string Target;
 
   public
-  NodeRef(string a, string t) {
+  NodeLink(string i, string a, string t) {
+    Id = i;
     Attr = a;
     Target = t; }
 
@@ -25,10 +26,7 @@ public struct NodeRef {
 public
 class Node {
   private readonly string _id;
-  private readonly NodeRef[] _refs;
-
   public string Id => _id;
-  public NodeRef[] Ref => _refs;
 
   public virtual
   void Receive(string n, float a) {}
@@ -43,9 +41,8 @@ class Node {
   void Init(DXDevice device) {}
 
   public
-  Node(string id, NodeRef[] refs) {
+  Node(string id) {
     _id = id;
-    _refs = refs;
   }}
 
 

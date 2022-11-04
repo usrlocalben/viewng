@@ -51,18 +51,18 @@ class FlexString : IFlexValue {
 
 class Float3Node : Node, IValueNode {
   private readonly Vector3 _value;
-  public Float3Node(string id, NodeRef[] refs, Vector3 value) : base(id, refs) { _value = value; }
+  public Float3Node(string id, Vector3 value) : base(id) { _value = value; }
   public IFlexValue Eval(string slot) { return new FlexFloat3(_value); }}
 
 
 class Float3NodeCompiler : NodeCompilerBase {
-  static public void Install() {
-    AnyCompiler.Register("float3", new CompileFunc(new Float3NodeCompiler().Compile)); }
+  public static void Install() {
+    AnyCompiler.Register("float3", (INodeCompiler)new Float3NodeCompiler()); }
   public override void CompileImpl() {
     var x = (float)_data.GetProperty("x").GetDouble();
     var y = (float)_data.GetProperty("y").GetDouble();
     var z = (float)_data.GetProperty("z").GetDouble();
-    _out.node = new Float3Node(_id, _links.ToArray(), new Vector3(x, y, z)); }}
+    _node = new Float3Node(_id, new Vector3(x, y, z)); }}
 
 
 class SystemValues : Node, IValueNode {
@@ -70,7 +70,7 @@ class SystemValues : Node, IValueNode {
   static private readonly FlexFloat notFoundValue = new(0);
   private readonly Dictionary<string, IFlexValue> _db = new();
 
-  public SystemValues(string id, NodeRef[]? refs = null) : base(id, refs ?? Array.Empty<NodeRef>()) {}
+  public SystemValues(string id) : base(id) {}
 
   public override void Connect(string attr, Node target, string slot) {}
 

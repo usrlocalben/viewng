@@ -17,7 +17,7 @@ class MulNode : Node, IValueNode {
   private readonly Vector4 _bValue;
 
   public
-  MulNode(string id, NodeRef[] refs, Options? opt = null) : base(id, refs) {
+  MulNode(string id, Options? opt = null) : base(id) {
     _aValue = opt?.a ?? new Vector4(1);
     _bValue = opt?.b ?? new Vector4(1); }
 
@@ -44,12 +44,12 @@ class MulNode : Node, IValueNode {
 
 
 public class MulNodeCompiler : NodeCompilerBase {
-  static public void Install() {
-    AnyCompiler.Register("mul", new CompileFunc(new MulNodeCompiler().Compile)); }
+  public static void Install() {
+    AnyCompiler.Register("mul", (INodeCompiler)new MulNodeCompiler()); }
   public override void CompileImpl() {
     Input("a", required: false);
     Input("b", required: false);
-    _out.node = new MulNode(_id, _links.ToArray()); }}
+    _node = new MulNode(_id); }}
 
 
 class AddNode : Node, IValueNode {
@@ -66,7 +66,7 @@ class AddNode : Node, IValueNode {
   private readonly Vector4 _bValue;
 
   public
-  AddNode(string id, NodeRef[] refs, Options? opt = null) : base(id, refs) {
+  AddNode(string id, Options? opt = null) : base(id) {
     _aValue = opt?.a ?? new Vector4(1);
     _bValue = opt?.b ?? new Vector4(1); }
 
@@ -93,12 +93,12 @@ class AddNode : Node, IValueNode {
 
 
 public class AddNodeCompiler : NodeCompilerBase {
-  static public void Install() {
-    AnyCompiler.Register("add", new CompileFunc(new AddNodeCompiler().Compile)); }
+  public static void Install() {
+    AnyCompiler.Register("add", (INodeCompiler)new AddNodeCompiler()); }
   public override void CompileImpl() {
     Input("a", required: false);
     Input("b", required: false);
-    _out.node = new AddNode(_id, _links.ToArray()); }}
+    _node = new AddNode(_id); }}
 
 
 }  // close package namespace

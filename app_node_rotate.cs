@@ -10,7 +10,7 @@ class GlRotate : Node, IGl {
   private string? _valueSlot;
 
   public
-  GlRotate(string id, NodeRef[] refs) : base(id, refs) {}
+  GlRotate(string id) : base(id) {}
 
   public override
   void Connect(string attr, Node target, string slot) {
@@ -36,12 +36,12 @@ class GlRotate : Node, IGl {
 
 
 class GlRotateCompiler : NodeCompilerBase {
-  static public void Install() {
-    AnyCompiler.Register("rotate", new CompileFunc(new GlRotateCompiler().Compile)); }
+  public static void Install() {
+    AnyCompiler.Register("rotate", (INodeCompiler)new GlRotateCompiler()); }
   public override void CompileImpl() {
     Input("amount", false);
     Input("gl", true);
-    _out.node = new GlRotate(_id, _links.ToArray()); }}
+    _node = new GlRotate(_id); }}
 
 
 }  // close package namespace
