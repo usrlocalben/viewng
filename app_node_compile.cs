@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Numerics;
+using System.Text.Json;
 using System.Windows.Forms.VisualStyles;
 
 namespace rqdq {
@@ -48,7 +49,7 @@ class NodeCompilerBase : INodeCompiler {
       if (attrData.ValueKind == JsonValueKind.String) {
         _links.Add(new NodeLink(_id, attr, attrData.GetString() ?? ""));  // XXX better way to convert nullable to non-nullable?
         }
-      else if (attrData.ValueKind == JsonValueKind.Object) {
+      else {
         CompileResult result = AnyCompiler.Compile(attrData);
         if (result.root is not null) {
           var subId = result.root.Id;
@@ -56,9 +57,7 @@ class NodeCompilerBase : INodeCompiler {
           _out.nodes.AddRange(result.nodes);
           _out.links.AddRange(result.links); }
         else {
-          throw new Exception($"unknown or malformed object at attr=\"{attr}\""); }}
-      else {
-        throw new Exception("node must be object or string"); }}
+          throw new Exception($"unknown or malformed object at attr=\"{attr}\""); }}}
     else {
       if (required) {
         throw new Exception("required!"); }}}
@@ -68,29 +67,9 @@ class NodeCompilerBase : INodeCompiler {
 
 
 internal static
-class ParseUtil {
-
+class AnyCompiler {
   private static int _idSeq = 0;
 
-  public static
-  bool TryExtractCommand(JsonElement data, out string name, out string id, out JsonElement enclosed) {
-    id = $"__auto{_idSeq++}__";
-    name = "";
-    enclosed = new JsonElement();
-    foreach (var prop in data.EnumerateObject()) {
-      if (prop.Name.StartsWith('$')) {
-        name = prop.Name[1..];
-        if (prop.Value.ValueKind == JsonValueKind.Object) {
-          enclosed = prop.Value;
-          if (prop.Value.TryGetProperty("id", out var idElem)) {
-            if (idElem.ValueKind == JsonValueKind.String) {
-              id = idElem.GetString(); }}
-          return true; }}}
-    return false; }}
-
-
-internal static
-class AnyCompiler {
   private static
   Dictionary<string, INodeCompiler> _db = new();
 
@@ -101,10 +80,35 @@ class AnyCompiler {
 
   public static
   CompileResult Compile(JsonElement data) {
-    if (ParseUtil.TryExtractCommand(data, out string name, out string id, out JsonElement payload)) {
-      if (_db.TryGetValue(name, out var nc)) {
-        return nc.Compile(id, payload); }}
-    return new(); } }
+
+    var id = $"__auto{_idSeq++}__";
+    if (data.ValueKind == JsonValueKind.Array) {
+      if (data.GetArrayLength() == 3) {
+        var nums = new float[3];
+        int numCnt = 0;
+        for (int i=0; i<3; ++i) {
+          if (data[i].ValueKind == JsonValueKind.Number) {
+            nums[i] = (float)data[i].GetDouble();
+            ++numCnt; }}
+          if (numCnt == 3) {
+            var node = new Float3Node(id, new Vector3(nums[0], nums[1], nums[2]));
+            var cr = new CompileResult();
+            cr.nodes.Add(node);
+            cr.root = node;
+            return cr; }}}
+    else if (data.ValueKind == JsonValueKind.Object) {
+      foreach (var prop in data.EnumerateObject()) {
+        if (prop.Name.StartsWith('$')) {
+          var name = prop.Name[1..];
+          if (prop.Value.ValueKind == JsonValueKind.Object) {
+            var enclosed = prop.Value;
+            if (prop.Value.TryGetProperty("id", out var idElem)) {
+              if (idElem.ValueKind == JsonValueKind.String) {
+                id = idElem.GetString(); }}
+
+            if (_db.TryGetValue(name, out var nc)) {
+              return nc.Compile(id, enclosed); }}}}}
+    return new(); }}
 
 
 public static

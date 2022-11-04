@@ -43,23 +43,23 @@ class MyApp {
     SystemValues systemValues = new("system");
     builtins.Add(systemValues);
 
-    string data = @"[{
-""$layer"": {
-  ""id"": ""__main__"",
-  ""camera"": {""$look"": {
-                 ""position"": {""$float3"": {""x"": 0, ""y"": 5, ""z"": -5}},
-                 ""target"": {""$float3"": {""x"": 0, ""y"": 0, ""z"": 0}},
-                 ""aspect"": ""system:canvasSize""
-                 }},
-  ""color"": {""$float3"": {""x"": 0.1, ""y"": 0.1, ""z"": 0.1}},
-  ""gl"": {""$rotate"": {
-             ""amount"": {""$mul"": {
-                            ""a"": {""$float3"": {""x"": 0, ""y"": 0.5, ""z"": 0}},
-                            ""b"": ""system:T""
-                            }},
-             ""gl"": {""$mesh"": {""src"": ""colortest.obj""}}
-             }}
-  }}]";
+    string data = @"[
+{""$layer"": {
+   ""id"": ""__main__"",
+   ""camera"": {""$look"": {
+                  ""position"": [0, 5, -5],
+                  ""target"": [0,0,0],
+                  ""aspect"": ""system:canvasSize""
+                  }},
+   ""color"": [0.1, 0.1, 0.1],
+   ""gl"": {""$rotate"": {
+              ""amount"": {""$mul"": {
+                             ""a"": [0, 0.5, 0],
+                             ""b"": ""system:T""
+                             }},
+              ""gl"": {""$mesh"": {""src"": ""colortest.obj""}}
+              }}
+   }}]";
 
     CompileResult cr;
     using (JsonDocument doc = JsonDocument.Parse(data)) {
