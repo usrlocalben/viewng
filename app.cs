@@ -27,6 +27,7 @@ class MyApp {
     MulNodeCompiler.Install();
     AddNodeCompiler.Install();
     GlRotateCompiler.Install();
+    GlMultiplyCompiler.Install();
     GlLayerCompiler.Install();
     GlMeshCompiler.Install();
     LookAtCompiler.Install();
@@ -57,7 +58,10 @@ class MyApp {
                              ""a"": [0, 0.5, 0],
                              ""b"": ""system:T""
                              }},
-              ""gl"": {""$mesh"": {""src"": ""colortest.obj""}}
+              ""gl"": {""$multiply"": {""many"": [4,0,0],
+                                       ""rotate"": [3.14,0,0],
+                                       ""translate"": [2,0,0],
+                                       ""gl"": {""$mesh"": {""src"": ""colortest.obj""}} }}
               }}
    }}]";
 
