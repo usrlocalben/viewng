@@ -15,11 +15,13 @@ namespace app {
 internal static
 class MyApp {
 
-  public const string dataDir = @"c:\users\ben\src\rsr\data\mesh";
+  public static string? DataDir;
 
   static public
   int Main(string[] args) {
 
+    DataDir = System.Environment.GetEnvironmentVariable("RQDQ__VIEWNG__DATA_DIR") ?? "data";
+      
     // FloatNodeCompiler.Install();
     // Float2NodeCompiler.Install();
     Float3NodeCompiler.Install();

@@ -106,7 +106,7 @@ public class GlMeshCompiler : NodeCompilerBase {
     Console.WriteLine("mesh compile");
     if (_data.TryGetProperty("src", out var src)) {
       var fn = src.GetString();
-      fn = Path.Join(rqdq.app.MyApp.dataDir, fn);
+      fn = Path.Join(rqdq.app.MyApp.DataDir, fn);
       Console.WriteLine($"loading mesh [{fn}]");
       (var mesh, var took, var inputSizeInBytes) = ObjLoader.Load(fn);
 
