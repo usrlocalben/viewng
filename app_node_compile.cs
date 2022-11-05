@@ -62,6 +62,23 @@ class NodeCompilerBase : INodeCompiler {
       if (required) {
         throw new Exception("required!"); }}}
 
+  protected
+  void InputMany(string attr, bool required) {
+    if (_data.TryGetProperty(attr, out var attrData)) {
+      if (attrData.ValueKind == JsonValueKind.Array) {
+        foreach (var elem in attrData.EnumerateArray()) {
+          CompileResult result = AnyCompiler.Compile(elem);
+          if (result.root is not null) {
+            var subId = result.root.Id;
+            _links.Add(new NodeLink(_id, attr, subId));
+            _out.nodes.AddRange(result.nodes);
+            _out.links.AddRange(result.links); }
+          else {
+            throw new Exception($"unknown or malformed object at attr=\"{attr}\""); }}}}
+    else {
+      if (required) {
+        throw new Exception("required!"); }}}
+
   public abstract
   void CompileImpl(); }
 

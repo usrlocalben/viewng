@@ -26,7 +26,7 @@ class MyApp {
     // Float4NodeCompiler.Install();
     MulNodeCompiler.Install();
     AddNodeCompiler.Install();
-    GlRotateCompiler.Install();
+    GlModifyCompiler.Install();
     GlMultiplyCompiler.Install();
     GlLayerCompiler.Install();
     GlMeshCompiler.Install();
@@ -45,25 +45,27 @@ class MyApp {
     builtins.Add(systemValues);
 
     string data = @"[
+{""$float3"": {""id"": ""origin"", ""x"": 0, ""y"": 0, ""z"": 0}},
+{""$float3"": {""id"": ""bluegreen"", ""x"": 0.2, ""y"": 0.5, ""z"": 0.5}},
+
 {""$layer"": {
    ""id"": ""__main__"",
    ""camera"": {""$look"": {
                   ""position"": [0, 5, -5],
-                  ""target"": [0,0,0],
+                  ""target"": ""origin"",
                   ""aspect"": ""system:canvasSize""
                   }},
-   ""color"": [0.1, 0.1, 0.1],
-   ""gl"": {""$rotate"": {
-              ""amount"": {""$mul"": {
-                             ""a"": [0, 0.5, 0],
+   ""color"": ""bluegreen"",
+   ""gl"": {""$modify"": {
+              ""scale"": [20,20,20],
+              ""rotate"": {""$mul"": {
+                             ""a"": [0, 0.0, 0],
                              ""b"": ""system:T""
                              }},
-              ""gl"": {""$multiply"": {""many"": [4,0,0],
-                                       ""rotate"": [3.14,0,0],
-                                       ""translate"": [2,0,0],
-                                       ""gl"": {""$mesh"": {""src"": ""colortest.obj""}} }}
+              ""gl"": [{""$mesh"": {""src"": ""board10m.obj""}}]
               }}
-   }}]";
+   }}
+]";
 
     CompileResult cr;
     using (JsonDocument doc = JsonDocument.Parse(data)) {
@@ -98,7 +100,7 @@ class MyApp {
       SampleDescription = new SampleDescription(1, 0),
       SwapEffect = SwapEffect.Discard,
       Usage = Usage.RenderTargetOutput
-    };
+      };
 
     DXDevice.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.None, desc, out DXDevice device, out SwapChain swapChain);
     var dc = device.ImmediateContext;
