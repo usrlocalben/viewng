@@ -5,8 +5,7 @@ using System.Windows.Forms.VisualStyles;
 namespace rqdq {
 namespace app {
 
-interface INodeCompiler {
-  CompileResult Compile(ReadOnlySpan<char> id, JsonElement data); }
+delegate CompileResult CompileFunc(ReadOnlySpan<char> id, JsonElement data);
 
 
 public
@@ -17,7 +16,7 @@ class CompileResult {
 
 
 public abstract
-class NodeCompilerBase : INodeCompiler {
+class NodeCompilerBase {
 
   protected JsonElement _data;
   protected string _id;
@@ -88,10 +87,10 @@ class AnyCompiler {
   private static int _idSeq = 0;
 
   private static
-  Dictionary<string, INodeCompiler> _db = new();
+  Dictionary<string, CompileFunc> _db = new();
 
   public static
-  void Register(string name, INodeCompiler nc) {
+  void Register(string name, CompileFunc nc) {
     Console.WriteLine($"registered [{name}]");
     _db[name] = nc; }
 
@@ -124,7 +123,7 @@ class AnyCompiler {
                 id = idElem.GetString(); }}
 
             if (_db.TryGetValue(name, out var nc)) {
-              return nc.Compile(id, enclosed); }}}}}
+              return nc(id, enclosed); }}}}}
     return new(); }}
 
 

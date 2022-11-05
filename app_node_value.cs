@@ -57,7 +57,7 @@ class Float3Node : Node, IValueNode {
 
 class Float3NodeCompiler : NodeCompilerBase {
   public static void Install() {
-    AnyCompiler.Register("float3", (INodeCompiler)new Float3NodeCompiler()); }
+    AnyCompiler.Register("float3", (id, elem) => new Float3NodeCompiler().Compile(id, elem)); }
   public override void CompileImpl() {
     var x = (float)_data.GetProperty("x").GetDouble();
     var y = (float)_data.GetProperty("y").GetDouble();

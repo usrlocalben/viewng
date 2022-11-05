@@ -46,7 +46,7 @@ class GlMultiply : Node, IGl {
 
 class GlMultiplyCompiler : NodeCompilerBase {
   public static void Install() {
-    AnyCompiler.Register("multiply", (INodeCompiler)new GlMultiplyCompiler()); }
+    AnyCompiler.Register("multiply", (id, elem) => new GlMultiplyCompiler().Compile(id, elem)); }
   public override void CompileImpl() {
     Input("many", false);
     Input("rotate", false);

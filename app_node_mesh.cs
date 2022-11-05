@@ -85,7 +85,7 @@ float4 PS(PS_DATA data) : SV_Target {
       var wvp = Matrix4x4.Multiply(vmat, pmat);
       wvp = Matrix4x4.Transpose(wvp);
       dc.UpdateSubresource(ref wvp, _constantBuffer);
-      dc.Draw(380*3, 0); }
+      dc.Draw(_theData.Length / 2, 0); }
 
     public
     void Dispose() {
@@ -101,7 +101,7 @@ float4 PS(PS_DATA data) : SV_Target {
 
 public class GlMeshCompiler : NodeCompilerBase {
   public static void Install() {
-    AnyCompiler.Register("mesh", (INodeCompiler)new GlMeshCompiler()); }
+    AnyCompiler.Register("mesh", (id, elem) => new GlMeshCompiler().Compile(id, elem)); }
   public override void CompileImpl() {
     Console.WriteLine("mesh compile");
     if (_data.TryGetProperty("src", out var src)) {

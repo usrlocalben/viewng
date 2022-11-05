@@ -59,7 +59,7 @@ class GlModify : Node, IGl {
 
 class GlModifyCompiler : NodeCompilerBase {
   public static void Install() {
-    AnyCompiler.Register("modify", (INodeCompiler)new GlModifyCompiler()); }
+    AnyCompiler.Register("modify", (id, elem) => new GlModifyCompiler().Compile(id, elem)); }
   public override void CompileImpl() {
     Input("rotate", false);
     Input("translate", false);

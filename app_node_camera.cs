@@ -49,7 +49,7 @@ class LookAt : Node, ICamera {
 
 class LookAtCompiler : NodeCompilerBase {
   public static void Install() {
-    AnyCompiler.Register("look", (INodeCompiler)new LookAtCompiler()); }
+    AnyCompiler.Register("look", (id, elem) => new LookAtCompiler().Compile(id, elem)); }
   public override void CompileImpl() {
     Input("position", required: false);
     Input("target", required: false);

@@ -57,12 +57,13 @@ class MyApp {
                   }},
    ""color"": ""bluegreen"",
    ""gl"": {""$modify"": {
-              ""scale"": [20,20,20],
+              ""scale"": [4,4,4],
               ""rotate"": {""$mul"": {
-                             ""a"": [0, 0.0, 0],
+                             ""a"": [0, 2.0, 0],
                              ""b"": ""system:T""
                              }},
-              ""gl"": [{""$mesh"": {""src"": ""board10m.obj""}}]
+              ""gl"": [{""$modify"": {""gl"": [{""$mesh"": {""src"": ""rqdqoutline.obj""}}],
+                                      ""rotate"": [1.57,3.14,0]}}]
               }}
    }}
 ]";

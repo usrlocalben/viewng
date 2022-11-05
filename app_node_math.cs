@@ -45,7 +45,7 @@ class MulNode : Node, IValueNode {
 
 public class MulNodeCompiler : NodeCompilerBase {
   public static void Install() {
-    AnyCompiler.Register("mul", (INodeCompiler)new MulNodeCompiler()); }
+    AnyCompiler.Register("mul", (id, elem) => new MulNodeCompiler().Compile(id, elem)); }
   public override void CompileImpl() {
     Input("a", required: false);
     Input("b", required: false);
@@ -94,7 +94,7 @@ class AddNode : Node, IValueNode {
 
 public class AddNodeCompiler : NodeCompilerBase {
   public static void Install() {
-    AnyCompiler.Register("add", (INodeCompiler)new AddNodeCompiler()); }
+    AnyCompiler.Register("add", (id, elem) => new AddNodeCompiler().Compile(id, elem)); }
   public override void CompileImpl() {
     Input("a", required: false);
     Input("b", required: false);

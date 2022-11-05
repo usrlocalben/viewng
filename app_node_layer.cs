@@ -58,7 +58,7 @@ class GlLayer : Node, ILayer {
 
 public class GlLayerCompiler : NodeCompilerBase {
   static public void Install() {
-    AnyCompiler.Register("layer", (INodeCompiler)new GlLayerCompiler()); }
+    AnyCompiler.Register("layer", (id, elem) => new GlLayerCompiler().Compile(id, elem)); }
   public override void CompileImpl() {
     Input("camera", required: true);
     Input("gl", required: true);
