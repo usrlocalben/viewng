@@ -16,11 +16,13 @@ internal static
 class MyApp {
 
   public static string? DataDir;
+  public static string? SceneFileName;
 
   static public
   int Main(string[] args) {
 
     DataDir = System.Environment.GetEnvironmentVariable("RQDQ__VIEWNG__DATA_DIR") ?? "data";
+    SceneFileName = System.Environment.GetEnvironmentVariable("RQDQ__VIEWNG__SCENE_FILE_NAME") ?? "scene.json";
       
     // FloatNodeCompiler.Install();
     // Float2NodeCompiler.Install();
@@ -46,32 +48,10 @@ class MyApp {
     SystemValues systemValues = new("system");
     builtins.Add(systemValues);
 
-    string data = @"[
-{""$float3"": {""id"": ""origin"", ""x"": 0, ""y"": 0, ""z"": 0}},
-{""$float3"": {""id"": ""bluegreen"", ""x"": 0.2, ""y"": 0.5, ""z"": 0.5}},
-
-{""$layer"": {
-   ""id"": ""__main__"",
-   ""camera"": {""$look"": {
-                  ""position"": [0, 5, -5],
-                  ""target"": ""origin"",
-                  ""aspect"": ""system:canvasSize""
-                  }},
-   ""color"": ""bluegreen"",
-   ""gl"": {""$modify"": {
-              ""scale"": [4,4,4],
-              ""rotate"": {""$mul"": {
-                             ""a"": [0, 2.0, 0],
-                             ""b"": ""system:T""
-                             }},
-              ""gl"": [{""$modify"": {""gl"": [{""$mesh"": {""src"": ""rqdqoutline.obj""}}],
-                                      ""rotate"": [1.57,3.14,0]}}]
-              }}
-   }}
-]";
+    string sceneText = File.ReadAllText(Path.Join(DataDir, SceneFileName));
 
     CompileResult cr;
-    using (JsonDocument doc = JsonDocument.Parse(data)) {
+    using (JsonDocument doc = JsonDocument.Parse(sceneText)) {
       var docroot = doc.RootElement;
       foreach (var elem in docroot.EnumerateArray()) {
         cr = AnyCompiler.Compile(elem);
