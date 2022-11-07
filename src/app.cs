@@ -20,24 +20,10 @@ class MyApp {
 
   static public
   int Main(string[] args) {
-
     DataDir = System.Environment.GetEnvironmentVariable("RQDQ__VIEWNG__DATA_DIR") ?? "data";
     SceneFileName = System.Environment.GetEnvironmentVariable("RQDQ__VIEWNG__SCENE_FILE_NAME") ?? "scene.json";
-      
-    // FloatNodeCompiler.Install();
-    // Float2NodeCompiler.Install();
-    Float3NodeCompiler.Install();
-    // Float4NodeCompiler.Install();
-    MulNodeCompiler.Install();
-    AddNodeCompiler.Install();
-    GlModifyCompiler.Install();
-    GlMultiplyCompiler.Install();
-    GlLayerCompiler.Install();
-    GlMeshCompiler.Install();
-    LookAtCompiler.Install();
-
-    int result = AsyncMain(args).GetAwaiter().GetResult();
-    return result; }
+    AnyCompiler.Setup();
+    return AsyncMain(args).GetAwaiter().GetResult(); }
 
   static public
   async Task<int> AsyncMain(string[] args) {
@@ -71,7 +57,6 @@ class MyApp {
           sceneRoot = layerNode; }}}
     if (sceneRoot is null) {
       throw new Exception("did not find a layer node with id __main__"); }
-
 
     var form = new RenderForm("rqdq 2022");
     var desc = new SwapChainDescription() {

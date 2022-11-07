@@ -84,6 +84,15 @@ class AnyCompiler {
   Dictionary<string, CompileFunc> _db = new();
 
   public static
+  void Setup() {
+    var subclasses = from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                     from type in assembly.GetTypes()
+                     where type.IsSubclassOf(typeof(NodeCompilerBase))
+                     select type;
+    foreach (var t in subclasses) {
+      t.GetMethod("Install").Invoke(null, null); }}
+
+  public static
   void Register(string name, CompileFunc nc) {
     Console.WriteLine($"registered [{name}]");
     _db[name] = nc; }
