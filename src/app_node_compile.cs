@@ -28,12 +28,6 @@ class NodeCompilerBase {
   CompileResult Compile(ReadOnlySpan<char> id, JsonElement data) {
     _id = id.ToString();
     _data = data;
-    _links.Clear();
-    _node = null;
-    _out.root = null;
-    _out.links.Clear();
-    _out.nodes.Clear();
-
     CompileImpl();
     if (_node is null) {
       throw new Exception("badness"); }
