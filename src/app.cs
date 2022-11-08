@@ -20,6 +20,8 @@ class MyApp {
 
   static public
   int Main(string[] args) {
+    ExprTester.Foo();
+    return 1;
     DataDir = System.Environment.GetEnvironmentVariable("RQDQ__VIEWNG__DATA_DIR") ?? "data";
     SceneFileName = System.Environment.GetEnvironmentVariable("RQDQ__VIEWNG__SCENE_FILE_NAME") ?? "scene.json";
     AnyCompiler.Setup();
