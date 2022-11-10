@@ -7,6 +7,7 @@ enum TokenKind {
   Name, Function, Variable,
   Literal,
   Operator,
+  Unary,
   Separator,
   BeginParen,
   EndParen }

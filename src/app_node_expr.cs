@@ -20,6 +20,11 @@ class ExprVariable : IExprNode {
   public double Eval(Dictionary<string, double> db) { return db[_name]; }}
 
 
+class ExprNeg : IExprNode {
+  public readonly IExprNode a;
+  public ExprNeg(IExprNode n) { a = n; }
+  public double Eval(Dictionary<string, double> db) { return -a.Eval(db); }}
+
 class ExprFn1 : IExprNode {
   private readonly IExprNode _a;
   private readonly Func<double, double> _op;
@@ -107,11 +112,18 @@ class ExprCompiler {
     Stack<int> argsLenStack = new();
 
     var remainder = text;
+    Token? tokPrev = null;
     while (!remainder.IsEmpty) {
       var tok = Tokenizer.Pop(ref remainder);
       if (tok.kind == TokenKind.Space) {
         continue; }
-      else if (tok.kind == TokenKind.Name) {
+
+      if (tok.kind == TokenKind.Operator
+          && tok.data == "-"
+          && (tokPrev?.kind ?? TokenKind.Operator) == TokenKind.Operator) {
+          tok.kind = TokenKind.Unary; }
+
+      if (tok.kind == TokenKind.Name) {
         if (_funcNames.Contains(tok.data)) {
           // function
           tok.kind = TokenKind.Function;
@@ -138,6 +150,8 @@ class ExprCompiler {
           var l = outStack.Pop();
           outStack.Push(ExprFnFactory.Make(op.data, l, r));  }
         opStack.Push(tok); }
+      else if (tok.kind == TokenKind.Unary) {
+        opStack.Push(tok); }
       else if (tok.kind == TokenKind.BeginParen) {
         opStack.Push(tok); }
       else if (tok.kind == TokenKind.EndParen) {
@@ -158,14 +172,19 @@ class ExprCompiler {
           if (many >= 1) a1 = outStack.Pop();
           if (many >= 2) a2 = outStack.Pop();
           if (many >= 3) a3 = outStack.Pop();
-          outStack.Push(ExprFnFactory.Make(op.data, a1, a2, a3)); }}}
+          outStack.Push(ExprFnFactory.Make(op.data, a1, a2, a3)); }}
+      tokPrev = tok; }
     /*if (opStack.Count > 1) {
       throw new Exception($"opstack sizes is {opStack.Count} after parse"); }*/
     while (opStack.Count > 0) {
       var op = opStack.Pop();
-      var l = outStack.Pop();
-      var r = outStack.Pop();
-      outStack.Push(ExprFnFactory.Make(op.data, l, r));  }
+      if (op.kind == TokenKind.Unary) {
+        var l = outStack.Pop();
+        outStack.Push(new ExprNeg(l)); }
+      else {
+        var l = outStack.Pop();
+        var r = outStack.Pop();
+       outStack.Push(ExprFnFactory.Make(op.data, l, r)); }}
 
     var root = outStack.Pop();
       return root; }}
@@ -218,11 +237,11 @@ class ComputedNodeCompiler : NodeCompilerBase {
 
   public override void CompileImpl() {
     var exprText = _data.GetProperty("expr").GetString();
-    var inputs = _data.GetProperty("inputs");
-    foreach (var elem in inputs.EnumerateObject()) {
-      var name = elem.Name;
-      var source = elem.Value.GetString();
-      _links.Add(new NodeLink(_id, name, source)); }
+    if (_data.TryGetProperty("inputs", out var inputs)) {
+      foreach (var elem in inputs.EnumerateObject()) {
+        var name = elem.Name;
+        var source = elem.Value.GetString();
+        _links.Add(new NodeLink(_id, name, source)); }}
 
     var cnt = 0;
     foreach (var part in rqdq.rclt.NestedSplitter.Split(exprText)) ++cnt;

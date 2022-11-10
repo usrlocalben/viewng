@@ -2,16 +2,19 @@
 {"$float3": {"id": "origin", "x": 0, "y": 0, "z": 0}},
 {"$float3": {"id": "bluegreen", "x": 0.2, "y": 0.5, "z": 0.5}},
 
+{"$computed": {"id": "spin",
+             "expr": "0, (T*85/60*6.28+sin(T*85/60*6.28)), 0",
+             "inputs": {"T": "system:T"}}},
+
 {"$layer": {"id": "__main__",
-   "camera": {"$look": {"position": [0, 5, -5],
+   "camera": {"$look": {"position": [0, 5, 5],
                     "target": "origin",
                     "aspect": "system:canvasSize"}},
    "color": "bluegreen",
    "gl": {"$modify": {"scale": [4,4,4],
-                  "rotate": {"$computed": {"expr": "0, T*85/60*6.28+sin(T*85/60*6.28), 0",
-                                       "inputs": {"T": "system:T"}}},
+                  "rotate": {"$computed": {"expr": "(sin(T*2)+1)/8-0.125, (sin(T*170/60)+1)/8-.125, 0", "inputs": {"T": "system:T"}}},
                   "gl": [{"$modify": {"gl": [{"$mesh": {"src": "rqdqoutline.obj"}}],
-                                  "rotate": [1.57,3.14,0]}}]
+                                  "rotate": [1.57,0,0]}}]
          }}
    }}
 ]
