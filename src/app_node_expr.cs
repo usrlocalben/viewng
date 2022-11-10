@@ -222,47 +222,28 @@ class ComputedNode : Node, IValueNode {
 
 
 class ComputedNodeCompiler : NodeCompilerBase {
+  private const int _maxElems = 4;
   public static void Install() {
     AnyCompiler.Register("computed", (id, elem) => new ComputedNodeCompiler().Compile(id, elem)); }
 
-  public static
-  List<string> SmartCommaSplit(string text) {
-    List<string> ax = new();
-    int level = 0;
-    int j = 0;
-    while (true) {
-      bool found = false;
-      for (int k=j; k<text.Length; ++k) {
-        if (text[k] == '(') {
-          ++j; }
-        else if (text[k] == ')') {
-          --j; }
-        else if (text[k] == ',' && level == 0) {
-          ax.Add(text[j..k]);
-          j = k + 1;
-          found = true;
-          break; }}
-      if (!found) {
-        break; }}
-    ax.Add(text[j..]);
-    return ax; }
-
   public override void CompileImpl() {
-    var expr = _data.GetProperty("expr").GetString();
+    var exprText = _data.GetProperty("expr").GetString();
     var inputs = _data.GetProperty("inputs");
     foreach (var elem in inputs.EnumerateObject()) {
       var name = elem.Name;
       var source = elem.Value.GetString();
       _links.Add(new NodeLink(_id, name, source)); }
 
-    var parts = SmartCommaSplit(expr);
-    List<ExprNode> exprs = new();
-    foreach (var part in parts) {
-      Console.WriteLine($"expr part [{part}]");
-      var exprRoot = ExprCompiler.Compile(part);
-      exprs.Add(exprRoot); }
+    var cnt = 0;
+    foreach (var part in rqdq.rclt.NestedSplitter.Split(exprText)) ++cnt;
+    var exprs = new ExprNode[cnt];
+    cnt = 0;
+    foreach (var (j, k) in rqdq.rclt.NestedSplitter.Split(exprText)) {
+      if (cnt >= _maxElems) break;
+      exprs[cnt++] = ExprCompiler.Compile(exprText.AsSpan()[j..k]); }
 
-    _node = new ComputedNode(_id, exprs.ToArray()); }}
+    _node = new ComputedNode(_id, exprs); }}
+
 
 }  // close package namespace
 }  // close enterprise namespace
