@@ -20,8 +20,6 @@ class MyApp {
 
   static public
   int Main(string[] args) {
-    ExprCompiler.Compile("sin(3*3.14+foo)/2+1");
-    return 1;
     DataDir = System.Environment.GetEnvironmentVariable("RQDQ__VIEWNG__DATA_DIR") ?? "data";
     SceneFileName = System.Environment.GetEnvironmentVariable("RQDQ__VIEWNG__SCENE_FILE_NAME") ?? "scene.json";
     AnyCompiler.Setup();
