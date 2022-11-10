@@ -4,98 +4,88 @@ using rqdq.rclt;
 namespace rqdq {
 namespace app {
 
+public interface IExprNode {
+  double Eval(Dictionary<string, double> db); }
 
-public abstract
-class ExprNode {
-  protected ExprNode() {}
-  // public static void Indent(int n) { for (int i=0; i<n; ++i) Console.Write('.'); }
-  public abstract double Eval(Dictionary<string, double> varDb); }
 
-public class ExprLiteral : ExprNode {
+class ExprLiteral : IExprNode {
   private readonly double _value;
-  public ExprLiteral(double value) : base() { _value = value; }
-  public override double Eval(Dictionary<string, double> varDb) { return _value; }}
+  public ExprLiteral(double value) { _value = value; }
+  public double Eval(Dictionary<string, double> db) { return _value; }}
 
-public class ExprVariable : ExprNode {
+
+class ExprVariable : IExprNode {
   private readonly string _name;
-  public ExprVariable(string name) : base() { _name = name; }
-  public override double Eval(Dictionary<string, double> varDb) { return varDb[_name]; }}
+  public ExprVariable(string name) { _name = name; }
+  public double Eval(Dictionary<string, double> db) { return db[_name]; }}
 
 
-abstract
-class ExprFn1 : ExprNode {
-  public ExprNode? _a;
-  public ExprFn1(ExprNode? a) : base() { _a = a; }
-  public override double Eval(Dictionary<string, double> varDb) { var a = _a.Eval(varDb); return Fn(a); }
-  public abstract double Fn(double x); }
-
-abstract
-class ExprFn2 : ExprNode {
-  public ExprNode? _a;
-  public ExprNode? _b;
-  public ExprFn2(ExprNode? a, ExprNode? b) : base() { _a = a; _b = b; }
-  public override double Eval(Dictionary<string, double> varDb) { var a = _a.Eval(varDb); var b = _b.Eval(varDb); return Fn(a, b); }
-  public abstract double Fn(double x, double b); }
-
-abstract
-class ExprFn3 : ExprNode {
-  public ExprNode? _a;
-  public ExprNode? _b;
-  public ExprNode? _c;
-  public ExprFn3(ExprNode? a, ExprNode? b, ExprNode? c) : base() { _a = a; _b = b; _c = c; }
-  public override double Eval(Dictionary<string, double> varDb) { var a = _a.Eval(varDb); var b = _b.Eval(varDb); var c = _c.Eval(varDb); return Fn(a, b, c); }
-  public abstract double Fn(double x, double b, double c); }
+class ExprFn1 : IExprNode {
+  private readonly IExprNode _a;
+  private readonly Func<double, double> _op;
+  public ExprFn1(Func<double, double> op, IExprNode a) {
+    _op = op; _a = a; }
+  public double Eval(Dictionary<string, double> db) {
+    return _op(_a.Eval(db)); }}
 
 
-class ExprFnSin : ExprFn1 { public ExprFnSin(ExprNode? a) : base(a) {} public override double Fn(double x) { return Math.Sin(x); }}
-class ExprFnCos : ExprFn1 { public ExprFnCos(ExprNode? a) : base(a) {} public override double Fn(double x) { return Math.Cos(x); }}
-class ExprFnTan : ExprFn1 { public ExprFnTan(ExprNode? a) : base(a) {} public override double Fn(double x) { return Math.Tan(x); }}
-class ExprFnAbs : ExprFn1 { public ExprFnAbs(ExprNode? a) : base(a) {} public override double Fn(double x) { return Math.Abs(x); }}
-class ExprFnExp : ExprFn1 { public ExprFnExp(ExprNode? a) : base(a) {} public override double Fn(double x) { return Math.Exp(x); }}
-class ExprFnSqrt : ExprFn1 { public ExprFnSqrt(ExprNode? a) : base(a) {} public override double Fn(double x) { return Math.Sqrt(x); }}
-class ExprFnCeil : ExprFn1 { public ExprFnCeil(ExprNode? a) : base(a) {} public override double Fn(double x) { return Math.Ceiling(x); }}
-class ExprFnSign : ExprFn1 { public ExprFnSign(ExprNode? a) : base(a) {} public override double Fn(double x) { return Math.Sign(x); }}
-class ExprFnFloor : ExprFn1 { public ExprFnFloor(ExprNode? a) : base(a) {} public override double Fn(double x) { return Math.Floor(x); }}
-class ExprFnFract : ExprFn1 { public ExprFnFract(ExprNode? a) : base(a) {} public override double Fn(double x) { return x - Math.Floor(x); }}
+class ExprFn2 : IExprNode {
+  private readonly IExprNode _a, _b;
+  private readonly Func<double, double, double> _op;
+  public ExprFn2(Func<double, double, double> op,
+                 IExprNode a, IExprNode b) {
+    _op = op; _a = a; _b = b; }
+  public double Eval(Dictionary<string, double> db) {
+    return _op(_a.Eval(db), _b.Eval(db)); }}
 
-class ExprFnAdd : ExprFn2 { public ExprFnAdd(ExprNode? a, ExprNode? b) : base(a, b) {} public override double Fn(double x, double y) { return x + y; }}
-class ExprFnSub : ExprFn2 { public ExprFnSub(ExprNode? a, ExprNode? b) : base(a, b) {} public override double Fn(double x, double y) { return x - y; }}
-class ExprFnMul : ExprFn2 { public ExprFnMul(ExprNode? a, ExprNode? b) : base(a, b) {} public override double Fn(double x, double y) { return x * y; }}
-class ExprFnDiv : ExprFn2 { public ExprFnDiv(ExprNode? a, ExprNode? b) : base(a, b) {} public override double Fn(double x, double y) { return x / y; }}
-class ExprFnMod : ExprFn2 { public ExprFnMod(ExprNode? a, ExprNode? b) : base(a, b) {} public override double Fn(double x, double y) { return x % y; }}
-class ExprFnMin : ExprFn2 { public ExprFnMin(ExprNode? a, ExprNode? b) : base(a, b) {} public override double Fn(double x, double y) { return Math.Min(x, y); }}
-class ExprFnMax : ExprFn2 { public ExprFnMax(ExprNode? a, ExprNode? b) : base(a, b) {} public override double Fn(double x, double y) { return Math.Max(x, y); }}
-class ExprFnPow : ExprFn2 { public ExprFnPow(ExprNode? a, ExprNode? b) : base(a, b) {} public override double Fn(double x, double y) { return Math.Pow(x, y); }}
 
-class ExprFnLerp : ExprFn3 { public ExprFnLerp(ExprNode? a, ExprNode? b, ExprNode? c) : base(a, b, c) {} public override double Fn(double a, double b, double t) { return a*(1.0-t) + b*t; }}
-class ExprFnClamp : ExprFn3 { public ExprFnClamp(ExprNode? a, ExprNode? b, ExprNode? c) : base(a, b, c) {} public override double Fn(double x, double a, double b) { return Math.Min(Math.Max(x, a), b); }}
+class ExprFn3 : IExprNode {
+  private readonly IExprNode _a, _b, _c;
+  private readonly Func<double, double, double, double> _op;
+  public ExprFn3(Func<double, double, double, double> op,
+                 IExprNode a, IExprNode b, IExprNode c) {
+    _op = op; _a = a; _b = b; _c = c; }
+  public double Eval(Dictionary<string, double> db) {
+    return _op(_a.Eval(db), _b.Eval(db), _c.Eval(db)); }}
+
 
 static
 class ExprFnFactory {
+
+  private static Dictionary<string, Func<double, double>> _fns1 = new() {
+    { "sin", Math.Sin },
+    { "cos", Math.Cos },
+    { "tan", Math.Tan },
+    { "sqrt", Math.Sqrt },
+    { "exp", Math.Exp },
+    { "floor", Math.Floor },
+    { "ceil", Math.Ceiling },
+    { "frac", a => a - Math.Floor(a) },
+    { "abs", Math.Abs },
+    { "sign", a => (double)Math.Sign(a) } };
+
+  private static Dictionary<string, Func<double, double, double>> _fns2 = new() {
+    { "min", Math.Min },
+    { "max", Math.Max },
+    { "pow", Math.Pow },
+    { "+", (a, b) => a + b },
+    { "-", (a, b) => a - b },
+    { "*", (a, b) => a * b },
+    { "/", (a, b) => a / b },
+    { "%", (a, b) => a % b } };
+
+  private static Dictionary<string, Func<double, double, double, double>> _fns3 = new() {
+    { "clamp", (a, l, h) => Math.Min(Math.Max(a, l), h) },
+    { "lerp", (a, b, t) => a*(1.0-t) + b*t } };
+
   public static
-  ExprNode Make(string n, ExprNode? a = null, ExprNode? b = null, ExprNode? c = null) {
-    if (n == "sin") { return new ExprFnSin(a); }
-    if (n == "cos") { return new ExprFnCos(a); }
-    if (n == "tan") { return new ExprFnTan(a); }
-    if (n == "sqrt") { return new ExprFnSqrt(a); }
-    if (n == "floor") { return new ExprFnFloor(a); }
-    if (n == "ceil") { return new ExprFnCeil(a); }
-    if (n == "abs") { return new ExprFnAbs(a); }
-    if (n == "sign") { return new ExprFnSign(a); }
-    if (n == "exp") { return new ExprFnExp(a); }
-    if (n=="fract" || n=="frac") { return new ExprFnFract(a); }
-
-    if (n=="min") { return new ExprFnMin(a, b); }
-    if (n=="max") { return new ExprFnMax(a, b); }
-    if (n=="pow") { return new ExprFnPow(a, b); }
-    if (n=="+") { return new ExprFnAdd(a, b); }
-    if (n=="-") { return new ExprFnSub(a, b); }
-    if (n=="*") { return new ExprFnMul(a, b); }
-    if (n=="/") { return new ExprFnDiv(a, b); }
-    if (n=="%") { return new ExprFnMod(a, b); }
-
-    if (n=="clamp") { return new ExprFnClamp(a, b, c); }
-    if (n=="lerp" || n=="mix") { return new ExprFnLerp(a, b, c); }
+  IExprNode Make(string n, IExprNode? a = null, IExprNode? b = null, IExprNode? c = null) {
+    if (_fns1.TryGetValue(n, out var fn1)) {
+      return new ExprFn1(fn1, a); }
+    if (_fns2.TryGetValue(n, out var fn2)) {
+      return new ExprFn2(fn2, a, b); }
+    if (_fns3.TryGetValue(n, out var fn3)) {
+      return new ExprFn3(fn3, a, b, c); }
     throw new Exception($"unknown exprfn function \"{n}\""); }}
 
 
@@ -111,8 +101,8 @@ class ExprCompiler {
     "min", "max", "clamp", "mix" };
 
   public static
-  ExprNode Compile(ReadOnlySpan<char> text) {
-    Stack<ExprNode> outStack = new();
+  IExprNode Compile(ReadOnlySpan<char> text) {
+    Stack<IExprNode> outStack = new();
     Stack<Token> opStack = new();
     Stack<int> argsLenStack = new();
 
@@ -162,9 +152,9 @@ class ExprCompiler {
           var many = argsLenStack.Pop();
           if (many > 3) {
             throw new Exception("too many args in exprnode function call"); }
-          ExprNode? a1 = null;
-          ExprNode? a2 = null;
-          ExprNode? a3 = null;
+          IExprNode? a1 = null;
+          IExprNode? a2 = null;
+          IExprNode? a3 = null;
           if (many >= 1) a1 = outStack.Pop();
           if (many >= 2) a2 = outStack.Pop();
           if (many >= 3) a3 = outStack.Pop();
@@ -188,9 +178,9 @@ class ComputedNode : Node, IValueNode {
     public IValueNode node;
     public string slot; }
 
-  private ExprNode[] _exprs;
+  private IExprNode[] _exprs;
   private List<VarLink> _vars = new();
-  public ComputedNode(string id, ExprNode[] exprs) : base(id) { _exprs = exprs; }
+  public ComputedNode(string id, IExprNode[] exprs) : base(id) { _exprs = exprs; }
 
   public override
   void Connect(string attr, Node target, string slot) {
@@ -236,7 +226,7 @@ class ComputedNodeCompiler : NodeCompilerBase {
 
     var cnt = 0;
     foreach (var part in rqdq.rclt.NestedSplitter.Split(exprText)) ++cnt;
-    var exprs = new ExprNode[cnt];
+    var exprs = new IExprNode[cnt];
     cnt = 0;
     foreach (var (j, k) in rqdq.rclt.NestedSplitter.Split(exprText)) {
       if (cnt >= _maxElems) break;
