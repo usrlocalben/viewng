@@ -134,6 +134,16 @@ public static
 class GraphLinker {
 
   public static
+  void Link(SceneGraph sg) {
+    Link(sg.node, sg.link);
+
+    // XXX linq here?
+    foreach (var node in sg.node) {
+      if (node.Id == "__main__") {
+        sg.root = node;
+        break; }}}
+
+  public static
   void Link(List<Node> pgm, List<NodeLink> links) {
     Dictionary<string, Node> byId = new();
     for (int i=0; i<pgm.Count; ++i) {

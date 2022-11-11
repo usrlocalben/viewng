@@ -73,30 +73,30 @@ float4 PS(PS_DATA data) : SV_Target {
       ResourceOptionFlags.None,
       0);}
 
-    public
-    void Draw(DeviceContext dc, Matrix4x4 vmat, Matrix4x4 pmat) {
-      dc.InputAssembler.InputLayout = _layout;
-      dc.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-      dc.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertices, Utilities.SizeOf<Vector3>() * 2, 0));
-      dc.VertexShader.SetConstantBuffer(0, _constantBuffer);
-      dc.VertexShader.Set(_vertexShader);
-      dc.PixelShader.Set(_pixelShader);
+  public
+  void Draw(DeviceContext dc, Matrix4x4 vmat, Matrix4x4 pmat) {
+    dc.InputAssembler.InputLayout = _layout;
+    dc.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
+    dc.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertices, Utilities.SizeOf<Vector3>() * 2, 0));
+    dc.VertexShader.SetConstantBuffer(0, _constantBuffer);
+    dc.VertexShader.Set(_vertexShader);
+    dc.PixelShader.Set(_pixelShader);
 
-      var wvp = Matrix4x4.Multiply(vmat, pmat);
-      wvp = Matrix4x4.Transpose(wvp);
-      dc.UpdateSubresource(ref wvp, _constantBuffer);
-      dc.Draw(_theData.Length / 2, 0); }
+    var wvp = Matrix4x4.Multiply(vmat, pmat);
+    wvp = Matrix4x4.Transpose(wvp);
+    dc.UpdateSubresource(ref wvp, _constantBuffer);
+    dc.Draw(_theData.Length / 2, 0); }
 
-    public
-    void Dispose() {
-      _signature.Dispose();
-      _vertexShaderBytecode.Dispose();
-      _vertexShader.Dispose();
-      _pixelShaderBytecode.Dispose();
-      _pixelShader.Dispose();
-      _vertices.Dispose();
-      _layout.Dispose();
-      _constantBuffer.Dispose(); }}
+  public override
+  void Dispose() {
+    _signature.Dispose();
+    _vertexShaderBytecode.Dispose();
+    _vertexShader.Dispose();
+    _pixelShaderBytecode.Dispose();
+    _pixelShader.Dispose();
+    _vertices.Dispose();
+    _layout.Dispose();
+    _constantBuffer.Dispose(); }}
 
 
 public class GlMeshCompiler : NodeCompilerBase {

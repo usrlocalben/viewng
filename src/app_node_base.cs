@@ -5,6 +5,26 @@ using DXDevice = SharpDX.Direct3D11.Device;
 namespace rqdq {
 namespace app {
 
+public
+class SceneGraph : IDisposable {
+  public List<Node> node;
+  public List<NodeLink> link;
+  public Node? root;
+
+  public SceneGraph() {
+    root = null;
+    node = new();
+    link = new(); }
+
+  public void Init(DXDevice dd) {
+    foreach (var it in node) {
+      it.Init(dd); }}
+
+  public void Dispose() {
+    foreach (var it in node) {
+      it.Dispose(); } } }
+
+
 public struct NodeLink {
   public readonly string Id;
   public readonly string Attr;
@@ -24,7 +44,7 @@ public struct NodeLink {
 
 
 public
-class Node {
+class Node : IDisposable {
   private readonly string _id;
   public string Id => _id;
 
@@ -39,6 +59,9 @@ class Node {
 
   public virtual
   void Init(DXDevice device) {}
+
+  public virtual
+  void Dispose() {}
 
   public
   Node(string id) {
