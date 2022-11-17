@@ -1,9 +1,7 @@
-﻿using rqdq.rglv;
-using rqdq.rmlv;
+﻿using rqdq.rmlv;
 using rqdq.rcls;
 
-namespace rqdq {
-namespace rglv {
+namespace rqdq.rglv {
 
 struct Mtl {
   public string? name;
@@ -80,4 +78,3 @@ class MtlDb : IMtlParserProgram {
   
 
 }  // close package namespace
-}  // close enterprise namespace

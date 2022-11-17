@@ -1,8 +1,7 @@
 ﻿using System.Numerics;
 using SharpDX.Direct3D11;
 
-namespace rqdq {
-namespace app {
+namespace rqdq.scene {
 
 class GlMultiply : Node, IGl {
   private IGl? _glNode;
@@ -56,4 +55,3 @@ class GlMultiplyCompiler : NodeCompilerBase {
 
 
 }  // close package namespace
-}  // close enterprise namespace

@@ -1,11 +1,10 @@
-﻿using System.IO;
-using System.Numerics;
+﻿using System.Numerics;
 using rqdq.rcls;
 using rqdq.rmlv;
 
-namespace rqdq {
-namespace rglv {
+namespace rqdq.rglv {
 
+public
 class ObjMesh : IObjParserProgram {
   private DirContext _dir;
 
@@ -116,11 +115,7 @@ class ObjMesh : IObjParserProgram {
       for (int vi=0; vi<3; ++vi) {
         arr[pi*3*2 + vi*2 + 0] = _vP[_primP[pi*3 + (2-vi)]].ToVector3() * 0.025F;
         arr[pi*3*2 + vi*2 + 1] = mtl.kd.ToVector3(); }}
-    return arr; }
-
-  }
-
+    return arr; } }
 
 
 }  // close package namespace
-}  // close enterprise namespace

@@ -2,8 +2,7 @@
 using SharpDX.Direct3D11;
 using DXDevice = SharpDX.Direct3D11.Device;
 
-namespace rqdq {
-namespace app {
+namespace rqdq.scene {
 
 public
 class SceneGraph : IDisposable {
@@ -74,6 +73,7 @@ interface ICamera {
   Matrix4x4 GetProjMatrix(); }
 
 
+public
 interface IFlexValue {
   string AsString();
   float AsFloat();
@@ -90,10 +90,10 @@ interface IGl {
   void Draw(DeviceContext dc, Matrix4x4 vmat, Matrix4x4 pmat); }
 
 
+public
 interface ILayer {
   Vector4 GetColor();
   void Draw(DeviceContext dc); }
 
 
 }  // close package namespace
-}  // close enterprise namespace

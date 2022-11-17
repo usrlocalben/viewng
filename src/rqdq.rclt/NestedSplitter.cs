@@ -1,5 +1,4 @@
-namespace rqdq {
-namespace rclt {
+namespace rqdq.rclt {
 
 public static
 class NestedSplitter {
@@ -34,4 +33,3 @@ class NestedSplitter {
 
 
 }  // close package namespace
-}  // close enterprise namespace

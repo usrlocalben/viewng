@@ -1,8 +1,7 @@
 ﻿using System.Numerics;
 using SharpDX.Direct3D11;
 
-namespace rqdq {
-namespace app {
+namespace rqdq.scene {
 
 class GlLayer : Node, ILayer {
   public struct Options {
@@ -67,4 +66,3 @@ public class GlLayerCompiler : NodeCompilerBase {
 
 
 }  // close package namespace
-}  // close enterprise namespace

@@ -1,8 +1,7 @@
 using System.Numerics;
 using rqdq.rclt;
 
-namespace rqdq {
-namespace app {
+namespace rqdq.scene {
 
 public interface IExprNode {
   double Eval(Dictionary<string, double> db); }
@@ -255,4 +254,3 @@ class ComputedNodeCompiler : NodeCompilerBase {
 
 
 }  // close package namespace
-}  // close enterprise namespace

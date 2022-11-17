@@ -2,9 +2,9 @@
 using System.IO.MemoryMappedFiles;
 using rqdq.rcls;
 
-namespace rqdq {
-namespace rglv {
+namespace rqdq.rglv {
 
+public
 class ObjLoader {
 
   static public
@@ -24,4 +24,3 @@ class ObjLoader {
 
 
 }  // close package namespace
-}  // close enterprise namespace

@@ -2,8 +2,7 @@
 using System.IO.MemoryMappedFiles;
 using rqdq.rcls;
 
-namespace rqdq {
-namespace rglv {
+namespace rqdq.rglv {
 
 class MtlLoader {
 
@@ -24,4 +23,3 @@ class MtlLoader {
 
 
 }  // close package namespace
-}  // close enterprise namespace

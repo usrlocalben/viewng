@@ -1,10 +1,9 @@
 ﻿using System.Numerics;
 using System.Text.Json;
-using System.Windows.Forms.VisualStyles;
 
-namespace rqdq {
-namespace app {
+namespace rqdq.scene {
 
+public
 delegate CompileResult CompileFunc(ReadOnlySpan<char> id, JsonElement data);
 
 
@@ -76,7 +75,7 @@ class NodeCompilerBase {
   void CompileImpl(); }
 
 
-internal static
+public static
 class AnyCompiler {
   private static int _idSeq = 0;
 
@@ -161,4 +160,3 @@ class GraphLinker {
 
 
 }  // close package namespace
-}  // close enterprise namespace

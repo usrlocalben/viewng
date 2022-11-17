@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 
-namespace rqdq {
-namespace app {
+namespace rqdq.scene {
 
 class LookAt : Node, ICamera {
   private IValueNode? _positionNode;
@@ -58,4 +57,3 @@ class LookAtCompiler : NodeCompilerBase {
 
 
 }  // close package namespace
-}  // close enterprise namespace

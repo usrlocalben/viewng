@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 
-namespace rqdq {
-namespace app {
+namespace rqdq.scene {
 
 class FlexFloat : IFlexValue {
   private readonly float _a;
@@ -65,6 +64,7 @@ class Float3NodeCompiler : NodeCompilerBase {
     _node = new Float3Node(_id, new Vector3(x, y, z)); }}
 
 
+public 
 class SystemValues : Node, IValueNode {
 
   static private readonly FlexFloat notFoundValue = new(0);
@@ -87,4 +87,3 @@ class SystemValues : Node, IValueNode {
 
 
 }  // close package namespace
-}  // close enterprise namespace

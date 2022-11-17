@@ -1,5 +1,4 @@
-﻿namespace rqdq {
-namespace rclt {
+﻿namespace rqdq.rclt {
 
 public
 enum TokenKind {
@@ -119,4 +118,3 @@ class Tokenizer {
 
 
 }  // close package namespace
-}  // close enterprise namespace

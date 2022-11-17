@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 
-namespace rqdq {
-namespace rmlv {
+namespace rqdq.rmlv {
 
 struct IVec2 {
   public long x, y;
@@ -67,4 +66,3 @@ struct Float3 {
 
 
 }  // close package namespace
-}  // close enterprise namespace

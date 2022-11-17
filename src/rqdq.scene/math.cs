@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 
-namespace rqdq {
-namespace app {
+namespace rqdq.scene {
 
 class MulNode : Node, IValueNode {
 
@@ -102,4 +101,3 @@ public class AddNodeCompiler : NodeCompilerBase {
 
 
 }  // close package namespace
-}  // close enterprise namespace

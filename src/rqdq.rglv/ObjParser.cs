@@ -7,8 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using BTU = rqdq.rclt.ByteTextUtil;
 
-namespace rqdq {
-namespace rglv {
+namespace rqdq.rglv {
 
 abstract internal class ParserBase {
   private static readonly byte[] CR = Encoding.UTF8.GetBytes("\r");
@@ -241,4 +240,3 @@ class MtlParser : ParserBase {
 
 
 }  // close package namespace
-}  // close enterprise namespace

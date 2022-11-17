@@ -8,10 +8,9 @@ using SharpDX.DXGI;
 using SharpDX.Windows;
 using SharpDX.Mathematics.Interop;
 using DXDevice = SharpDX.Direct3D11.Device;
-using rqdq.app;
+using rqdq.scene;
 
-namespace rqdq {
-namespace app {
+namespace rqdq.viewng {
 
 internal static
 class MyApp {
@@ -24,6 +23,7 @@ class MyApp {
     DataDir = System.Environment.GetEnvironmentVariable("RQDQ__VIEWNG__DATA_DIR") ?? "data";
     SceneFileName = System.Environment.GetEnvironmentVariable("RQDQ__VIEWNG__SCENE_FILE_NAME") ?? "scene.json";
     AnyCompiler.Setup();
+    GlMeshCompiler.DataDir = DataDir;  // XXX yuck
     return AsyncMain(args).GetAwaiter().GetResult(); }
 
   static public
@@ -184,4 +184,3 @@ class MyApp {
     return sg; } }
 
 }  // close package namespace
-}  // close enterprise namespace

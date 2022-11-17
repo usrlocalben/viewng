@@ -1,5 +1,4 @@
-﻿namespace rqdq {
-namespace rglv {
+﻿namespace rqdq.rglv {
 
 interface IObjParserProgram {
   void MtlLib(string data);
@@ -39,4 +38,3 @@ interface IMtlParserProgram {
 
 
 }  // close package namespace
-}  // close enterprise namespace

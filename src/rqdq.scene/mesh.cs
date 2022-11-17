@@ -8,8 +8,7 @@ using SharpDX.DXGI;
 using DXBuffer = SharpDX.Direct3D11.Buffer;
 using DXDevice = SharpDX.Direct3D11.Device;
 
-namespace rqdq {
-namespace app {
+namespace rqdq.scene {
 
 class GlMesh : Node, IGl {
 
@@ -100,13 +99,14 @@ float4 PS(PS_DATA data) : SV_Target {
 
 
 public class GlMeshCompiler : NodeCompilerBase {
+  public static string DataDir = "";
   public static void Install() {
     AnyCompiler.Register("mesh", (id, elem) => new GlMeshCompiler().Compile(id, elem)); }
   public override void CompileImpl() {
     Console.WriteLine("mesh compile");
     if (_data.TryGetProperty("src", out var src)) {
       var fn = src.GetString();
-      fn = Path.Join(rqdq.app.MyApp.DataDir, fn);
+      fn = Path.Join(DataDir, fn);
       Console.WriteLine($"loading mesh [{fn}]");
       (var mesh, var took, var inputSizeInBytes) = ObjLoader.Load(fn);
 
@@ -129,4 +129,3 @@ public class GlMeshCompiler : NodeCompilerBase {
 
 
 }  // close package namespace
-}  // close enterprise namespace

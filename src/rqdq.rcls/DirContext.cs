@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-namespace rqdq {
-namespace rcls {
+namespace rqdq.rcls {
 
+public
 class DirContext {
   private string _dir;
 
@@ -26,4 +26,3 @@ class DirContext {
       
 
 }  // close package namespace
-}  // close enterprise namespace

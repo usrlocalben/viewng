@@ -1,14 +1,13 @@
 ﻿using System.Buffers.Text;
 
-namespace rqdq {
-namespace rclt {
+namespace rqdq.rclt {
 
 /// <summary>
 /// utility methods for text-parsing over a span in-place (i.e.
 /// mutating the passed span). facilitates writing parsers that
 /// avoid copies or allocation.
 /// </summary>
-static
+public static
 class ByteTextUtil {
 
   const byte NL = (byte)'\n';  // new-line char as byte
@@ -105,4 +104,3 @@ class ByteTextUtil {
 
 
 }  // close package namespace
-}  // close enterprise namespace
