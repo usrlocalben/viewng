@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "viewng": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "RQDQ__VIEWNG__DATA_DIR": "$(SolutionDir)\\data"
+      }
+    }
+  }
+}

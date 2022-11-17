@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rqdq.rcls", "src\rqdq.rcls\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rqdq.scene", "src\rqdq.scene\rqdq.scene.csproj", "{EACF1161-B64E-4B73-A8A5-E39F7EA00206}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rqdq.editor", "src\rqdq.editor\rqdq.editor.csproj", "{4DD455F8-F36B-42BE-ABD1-A763ECE059DB}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rqdq.rmlv", "src\rqdq.rmlv\rqdq.rmlv.csproj", "{CE3EC350-3BC0-4779-A1A8-4B378FED2DEE}"
 EndProject
 Global
@@ -41,6 +43,10 @@ Global
 		{EACF1161-B64E-4B73-A8A5-E39F7EA00206}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EACF1161-B64E-4B73-A8A5-E39F7EA00206}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EACF1161-B64E-4B73-A8A5-E39F7EA00206}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DD455F8-F36B-42BE-ABD1-A763ECE059DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DD455F8-F36B-42BE-ABD1-A763ECE059DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DD455F8-F36B-42BE-ABD1-A763ECE059DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DD455F8-F36B-42BE-ABD1-A763ECE059DB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CE3EC350-3BC0-4779-A1A8-4B378FED2DEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CE3EC350-3BC0-4779-A1A8-4B378FED2DEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE3EC350-3BC0-4779-A1A8-4B378FED2DEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
