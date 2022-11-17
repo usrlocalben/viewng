@@ -5,13 +5,15 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rqdq.viewng", "src\rqdq.viewng\rqdq.viewng.csproj", "{4711BA5A-0FAE-4202-BC8E-F37D3B1F15EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rqdq.rclt", "src\rqdq.rclt\rqdq.rclt.csproj", "{09151836-ECB7-4546-ACDD-338A6B136525}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rqdq.rclt", "src\rqdq.rclt\rqdq.rclt.csproj", "{09151836-ECB7-4546-ACDD-338A6B136525}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rqdq.rglv", "src\rqdq.rglv\rqdq.rglv.csproj", "{8E0732AE-EA9F-466F-801E-3763D7D242AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rqdq.rglv", "src\rqdq.rglv\rqdq.rglv.csproj", "{8E0732AE-EA9F-466F-801E-3763D7D242AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rqdq.rcls", "src\rqdq.rcls\rqdq.rcls.csproj", "{10E47297-EAC8-4B81-B8E7-0C470BF62165}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rqdq.rcls", "src\rqdq.rcls\rqdq.rcls.csproj", "{10E47297-EAC8-4B81-B8E7-0C470BF62165}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rqdq.scene", "src\rqdq.scene\rqdq.scene.csproj", "{EACF1161-B64E-4B73-A8A5-E39F7EA00206}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rqdq.scene", "src\rqdq.scene\rqdq.scene.csproj", "{EACF1161-B64E-4B73-A8A5-E39F7EA00206}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rqdq.rmlv", "src\rqdq.rmlv\rqdq.rmlv.csproj", "{CE3EC350-3BC0-4779-A1A8-4B378FED2DEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{EACF1161-B64E-4B73-A8A5-E39F7EA00206}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EACF1161-B64E-4B73-A8A5-E39F7EA00206}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EACF1161-B64E-4B73-A8A5-E39F7EA00206}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE3EC350-3BC0-4779-A1A8-4B378FED2DEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE3EC350-3BC0-4779-A1A8-4B378FED2DEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE3EC350-3BC0-4779-A1A8-4B378FED2DEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE3EC350-3BC0-4779-A1A8-4B378FED2DEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\rqdq.rcls\rqdq.rcls.csproj" />
     <ProjectReference Include="..\rqdq.rclt\rqdq.rclt.csproj" />
+    <ProjectReference Include="..\rqdq.rmlv\rqdq.rmlv.csproj" />
   </ItemGroup>
 
 </Project>

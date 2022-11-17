@@ -1,16 +1,14 @@
 ﻿using System.Numerics;
-using rqdq.rcls;
-using rqdq.rmlv;
 
 namespace rqdq.rglv {
 
 public
 class ObjMesh : IObjParserProgram {
-  private DirContext _dir;
+  private rcls.DirContext _dir;
 
-  private List<Float3> _vP = new();
-  private List<Float3> _vN = new();
-  private List<Float2> _vT = new();
+  private List<rmlv.Float3> _vP = new();
+  private List<rmlv.Float3> _vN = new();
+  private List<rmlv.Float2> _vT = new();
   private List<int> _primP = new();
   private List<int> _primN = new();
   private List<int> _primT = new();
@@ -41,7 +39,7 @@ class ObjMesh : IObjParserProgram {
   public IEnumerable<string> Groups { get => _hashGroup.Keys; }
 
   public
-  ObjMesh(DirContext d) {
+  ObjMesh(rcls.DirContext d) {
     _dir = d; }
 
   public
@@ -63,11 +61,11 @@ class ObjMesh : IObjParserProgram {
     _curGroup = id; }
 
   public void P(float x, float y, float z) {
-    _vP.Add(new Float3(x, y, z)); }
+    _vP.Add(new rmlv.Float3(x, y, z)); }
   public void N(float x, float y, float z) {
-    _vN.Add(new Float3(x, y, z)); }
+    _vN.Add(new rmlv.Float3(x, y, z)); }
   public void T(float x, float y) {
-    _vT.Add(new Float2(x, y)); }
+    _vT.Add(new rmlv.Float2(x, y)); }
 
   public void BeginFace() {
     _tmpP.Clear();

@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
-using rqdq.rcls;
 
 namespace rqdq.rglv {
 
@@ -9,7 +8,7 @@ class MtlLoader {
   static public
   (MtlDb db, long took, long sizeInBytes) Load(string path) {
 
-    var dc = DirContext.FromFile(path);
+    var dc = rcls.DirContext.FromFile(path);
     var db = new MtlDb(dc);
     var timer = Stopwatch.StartNew();
 

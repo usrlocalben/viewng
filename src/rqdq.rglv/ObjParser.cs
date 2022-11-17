@@ -1,13 +1,11 @@
 ﻿using System.Buffers.Text;
-using System.IO.Compression;
 using System.IO.MemoryMappedFiles;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using BTU = rqdq.rclt.ByteTextUtil;
 
 namespace rqdq.rglv {
+
+using BTU = rclt.ByteTextUtil;
 
 abstract internal class ParserBase {
   private static readonly byte[] CR = Encoding.UTF8.GetBytes("\r");

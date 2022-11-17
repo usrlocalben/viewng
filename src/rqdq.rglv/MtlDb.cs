@@ -1,13 +1,10 @@
-﻿using rqdq.rmlv;
-using rqdq.rcls;
-
-namespace rqdq.rglv {
+﻿namespace rqdq.rglv {
 
 struct Mtl {
   public string? name;
-  public Float3 ka;
-  public Float3 kd;
-  public Float3 ks;
+  public rmlv.Float3 ka;
+  public rmlv.Float3 kd;
+  public rmlv.Float3 ks;
   public float ns;
   public float d;
   public string? mapKd;
@@ -15,9 +12,9 @@ struct Mtl {
 
   public void Reset() {
     this.name = null;
-    this.ka = new Float3(0.2F);
-    this.kd = new Float3(0.8F);
-    this.ks = new Float3(1.0F);
+    this.ka = new rmlv.Float3(0.2F);
+    this.kd = new rmlv.Float3(0.8F);
+    this.ks = new rmlv.Float3(1.0F);
     this.ns = 1.0F;
     this.d = 1.0F;
     this.mapKd = null;
@@ -26,7 +23,7 @@ struct Mtl {
 
 class MtlDb : IMtlParserProgram {
 
-  private DirContext _dc;
+  private rcls.DirContext _dc;
   // XXX private int _seq;
   private List<Mtl> _db = new();
   private Dictionary<string, int> _byName = new();
@@ -34,7 +31,7 @@ class MtlDb : IMtlParserProgram {
   private Mtl _cur;
 
   public
-  MtlDb(DirContext dc) {
+  MtlDb(rcls.DirContext dc) {
     _dc = dc;
     // XXX _seq = 0;
     _cur = new Mtl();
@@ -64,9 +61,9 @@ class MtlDb : IMtlParserProgram {
     _cur.name = data; }
 
   public void MapKd(string data) { _cur.mapKd = data; } 
-  public void Kd(float r, float g, float b) { _cur.kd = new Float3(r, g, b); }
-  public void Ka(float r, float g, float b) { _cur.ka = new Float3(r, g, b); }
-  public void Ks(float r, float g, float b) { _cur.ks = new Float3(r, g, b); }
+  public void Kd(float r, float g, float b) { _cur.kd = new rmlv.Float3(r, g, b); }
+  public void Ka(float r, float g, float b) { _cur.ka = new rmlv.Float3(r, g, b); }
+  public void Ks(float r, float g, float b) { _cur.ks = new rmlv.Float3(r, g, b); }
   public void Ns(float e) { _cur.ns = e; }
   public void D(float d) { _cur.d = d; }
   public void Illum(int mode) { _cur.mode = mode; }

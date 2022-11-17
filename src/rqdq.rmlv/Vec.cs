@@ -2,6 +2,7 @@
 
 namespace rqdq.rmlv {
 
+public
 struct IVec2 {
   public long x, y;
 
@@ -16,6 +17,7 @@ struct IVec2 {
   public static IVec2 operator /(IVec2 lhs, IVec2 rhs) { IVec2 tmp; tmp.x = lhs.x / rhs.x; tmp.y = lhs.y / rhs.y; return tmp; } }
 
 
+public
 struct IVec3 {
   public long x, y, z;
 
@@ -33,6 +35,7 @@ struct IVec3 {
   public IVec2 XY() { return new IVec2(this.x, this.y); } }
 
 
+public
 struct Float2 {
   public float x, y;
 
@@ -47,6 +50,7 @@ struct Float2 {
   public static Float2 operator/(Float2 lhs, Float2 rhs) { return new Float2(lhs.x / rhs.x, lhs.y / rhs.y); } }
 
 
+public
 struct Float3 {
   public float x, y, z;
 
