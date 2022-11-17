@@ -53,7 +53,7 @@ class MyApp {
 
     var mtime = File.GetLastWriteTime(Path.Join(DataDir, SceneFileName));
     string sceneText = File.ReadAllText(Path.Join(DataDir, SceneFileName));
-    var runningGraph = Compile(sceneText, builtins);
+    var runningGraph = scene.GraphBuilder.Build(sceneText, builtins);
     if (runningGraph.root is null) {
       throw new Exception("did not find a layer node with id __main__"); }
     runningGraph.Init(device);
@@ -131,7 +131,7 @@ class MyApp {
             SceneGraph? newGraph = null;
             try {
               string sceneText = File.ReadAllText(Path.Join(DataDir, SceneFileName));
-              newGraph = Compile(sceneText, builtins);
+              newGraph = scene.GraphBuilder.Build(sceneText, builtins);
               if (newGraph?.root is null) {
                 throw new Exception("did not find a layer node with id __main__"); }}
             catch (Exception err) {
@@ -163,24 +163,6 @@ class MyApp {
     dc.Dispose();
     swapChain.Dispose();
     factory.Dispose();
-    return 0; }
-
-  static
-  SceneGraph Compile(string text, List<Node> addl) {
-    SceneGraph sg = new();
-    CompileResult cr;
-    using (JsonDocument doc = JsonDocument.Parse(text)) {
-      var docroot = doc.RootElement;
-      foreach (var elem in docroot.EnumerateArray()) {
-        cr = AnyCompiler.Compile(elem);
-        if (cr.root is not null) {
-          sg.node.AddRange(cr.nodes);
-          sg.link.AddRange(cr.links); }
-        else {
-          throw new Exception("compile failed list"); }}}
-
-    sg.node.AddRange(addl);
-    GraphLinker.Link(sg);
-    return sg; } }
+    return 0; } }
 
 }  // close package namespace

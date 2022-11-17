@@ -159,4 +159,26 @@ class GraphLinker {
         throw new Exception($"unresolved link from={fromNode.Id}:{link.Attr} to={depId}:{depSlot}"); }}}}
 
 
+public
+class GraphBuilder {
+
+  public static
+  SceneGraph Build(string text, List<Node> addl) {
+    SceneGraph sg = new();
+    CompileResult cr;
+    using (JsonDocument doc = JsonDocument.Parse(text)) {
+      var docroot = doc.RootElement;
+      foreach (var elem in docroot.EnumerateArray()) {
+        cr = AnyCompiler.Compile(elem);
+        if (cr.root is not null) {
+          sg.node.AddRange(cr.nodes);
+          sg.link.AddRange(cr.links); }
+        else {
+          throw new Exception("compile failed list"); }}}
+
+    sg.node.AddRange(addl);
+    GraphLinker.Link(sg);
+    return sg; } }
+
+
 }  // close package namespace
